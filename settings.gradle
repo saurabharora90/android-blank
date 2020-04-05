@@ -1,2 +1,3 @@
+include ':mylibrary'
 rootProject.name='Android-blank'
 include ':app'

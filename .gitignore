@@ -44,7 +44,6 @@ true/*
 caches/
 daemon/
 native/
-wrapper/
 
 .apt_generated/
 .factorypath

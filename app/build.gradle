@@ -29,6 +29,7 @@ android {
 
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs = ["-XXLanguage:+InlineClasses"]
     }
 
 }
@@ -43,6 +44,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:$recyclerviewVersion"
     implementation "androidx.fragment:fragment-ktx:$fragmentKtxVersion"
     implementation "androidx.core:core-ktx:$coreKtxVersion"
+    implementation "androidx.paging:paging-runtime:$paging_version"
 
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"

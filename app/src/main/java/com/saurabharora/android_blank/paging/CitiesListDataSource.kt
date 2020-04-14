@@ -8,10 +8,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 import java.util.concurrent.TimeUnit
 
-class CitiesListDataSource(
-    private val itemsPerPage: Int,
-    private val initialPage: Int
-) : PageKeyedDataSource<Int, City>() {
+class CitiesListDataSource(private val initialPage: Int) : PageKeyedDataSource<Int, City>() {
 
     private val disposable = CompositeDisposable()
 
@@ -30,20 +27,26 @@ class CitiesListDataSource(
     ) {
         Single.just(
             listOf(
+                City("Damascus"),
+                City("Dhaka"),
                 City("Doha"),
                 City("Dublin"),
                 City("Edinburgh"),
                 City("Georgetown"),
                 City("Hanoi"),
                 City("Harare"),
+                City("Helsinki"),
                 City("Islamabad"),
                 City("Jakarta"),
                 City("Kabul"),
+                City("Kathmandu"),
                 City("Lisbon"),
                 City("London"),
                 City("Luxembourg"),
                 City("Madrid"),
-                City("Manila")
+                City("Male"),
+                City("Manila"),
+                City("Monaco")
             )
         )
             .delay(5, TimeUnit.SECONDS)
@@ -83,8 +86,14 @@ class CitiesListDataSource(
                 City("Belfast"),
                 City("Berlin"),
                 City("Bern"),
+                City("Brussels"),
+                City("Bucharest"),
+                City("Buenos Aires"),
                 City("Cairo"),
+                City("Cardiff"),
+                City("Castries"),
                 City("Colombo"),
+                City("Conakry"),
                 City("Copenhagen")
             )
         )
@@ -112,16 +121,22 @@ class CitiesListDataSource(
                 City("New Delhi"),
                 City("Oslo"),
                 City("Paris"),
+                City("Phnom Penh"),
                 City("Prague"),
                 City("Pyongyang"),
+                City("Quito"),
                 City("Reykjavik"),
                 City("Riyadh"),
                 City("Rome"),
+                City("Santiago"),
+                City("Seoul"),
                 City("Singapore"),
+                City("Stockholm"),
                 City("Taipei"),
                 City("Tokyo"),
                 City("Vienna"),
-                City("Warsaw")
+                City("Warsaw"),
+                City("Washington D.C.\n")
             )
         )
             .delay(5, TimeUnit.SECONDS)
@@ -131,7 +146,7 @@ class CitiesListDataSource(
                     _event.onNext(CityListEvent.Success.SuccessNextPage)
                     callback.onResult(
                         thread,
-                        if (thread.size < itemsPerPage) null else params.key + 1
+                        null //hardcode assumption that we'll only be loading one "after" page
                     )
                 },
                 { throwable ->
@@ -142,16 +157,13 @@ class CitiesListDataSource(
     }
 }
 
-class CitiesListDataSourceFactory(
-    private val itemsPerPage: Int,
-    private val initialPage: Int = 2
-) : DataSource.Factory<Int, City>() {
+class CitiesListDataSourceFactory(private val initialPage: Int = 2) :
+    DataSource.Factory<Int, City>() {
 
     private val _dataSource = BehaviorSubject.create<CitiesListDataSource>()
     val dataSource: Observable<CitiesListDataSource> = _dataSource
 
     override fun create(): DataSource<Int, City> = CitiesListDataSource(
-        itemsPerPage,
         initialPage
     ).also(_dataSource::onNext)
 }

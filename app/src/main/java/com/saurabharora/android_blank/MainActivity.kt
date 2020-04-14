@@ -8,9 +8,12 @@ import androidx.lifecycle.Observer
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.MergeAdapter
 import com.saurabharora.android_blank.adapter.CityPagingAdapter
+import com.saurabharora.android_blank.adapter.LoadingAdapter
 import com.saurabharora.android_blank.paging.CitiesListDataSourceFactory
 import com.saurabharora.android_blank.paging.City
+import io.reactivex.android.schedulers.AndroidSchedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val TAG = "MainActivity"
@@ -21,6 +24,8 @@ class MainActivity : AppCompatActivity() {
         CityPagingAdapter()
     }
 
+    private val loadingAdapter = LoadingAdapter()
+
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,13 +33,16 @@ class MainActivity : AppCompatActivity() {
 
         rvCities.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = cityAdapter
+            val mergeAdapter = MergeAdapter(loadingAdapter, cityAdapter)
+            adapter = mergeAdapter
         }
 
         val dataSourceFactory = CitiesListDataSourceFactory()
         dataSourceFactory.dataSource.switchMap { it.event }
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 Log.d(TAG, "Event emission: $it")
+                loadingAdapter.state = it
             }
 
 

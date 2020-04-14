@@ -24,7 +24,8 @@ class MainActivity : AppCompatActivity() {
         CityPagingAdapter()
     }
 
-    private val loadingAdapter = LoadingAdapter()
+    private val headerLoadingAdapter = LoadingAdapter(LoadingAdapter.Type.Header)
+    private val footerLoadingAdapter = LoadingAdapter(LoadingAdapter.Type.Footer)
 
     @SuppressLint("CheckResult")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
 
         rvCities.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
-            val mergeAdapter = MergeAdapter(loadingAdapter, cityAdapter)
+            val mergeAdapter = MergeAdapter(headerLoadingAdapter, cityAdapter, footerLoadingAdapter)
             adapter = mergeAdapter
         }
 
@@ -42,7 +43,8 @@ class MainActivity : AppCompatActivity() {
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
                 Log.d(TAG, "Event emission: $it")
-                loadingAdapter.state = it
+                headerLoadingAdapter.state = it
+                footerLoadingAdapter.state = it
             }
 
 

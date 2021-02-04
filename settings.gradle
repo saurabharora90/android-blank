@@ -1,2 +1,3 @@
+include ':android-blank-tv'
 rootProject.name='Android-blank'
 include ':app'

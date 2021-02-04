@@ -44,12 +44,10 @@ true/*
 caches/
 daemon/
 native/
-wrapper/
 
 .apt_generated/
 .factorypath
 /.gradle/
-.gradle
 /captures/
 */build/
 build/
